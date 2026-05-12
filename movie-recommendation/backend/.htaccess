@@ -1,0 +1,34 @@
+﻿# Desativar listagem de diretórios
+Options -Indexes
+
+# CORS Headers
+Header set Access-Control-Allow-Origin "http://localhost:4200"
+Header set Access-Control-Allow-Credentials "true"
+Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+
+# Responder preflight
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Proteger arquivos sensíveis
+<FilesMatch "\.(sql|log|ini|config\.php)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Headers de segurança
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "DENY"
+Header set X-XSS-Protection "1; mode=block"
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Habilitar rewrite engine
+RewriteEngine On
+
+# Redirecionar todas requisições para API para seus respectivos endpoints
+RewriteRule ^api/auth$ api/auth.php [L]
+RewriteRule ^api/movies$ api/movies.php [L]
+RewriteRule ^api/ratings$ api/ratings.php [L]
+RewriteRule ^api/recommendations$ api/recommendations.php [L]
